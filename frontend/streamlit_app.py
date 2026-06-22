@@ -237,7 +237,7 @@ if st.button("Analyze"):
             # Visualization
             # -------------------------
 
-            fig = create_chart(df)
+            fig = create_chart(df,question)
 
             if fig is not None:
 
