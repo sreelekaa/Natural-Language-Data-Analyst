@@ -22,7 +22,7 @@ def create_chart(df, question):
         "proportion",
         "contribution"
     ]):
-        return px.pie(
+        fig = px.pie(
             df,
             names=x_col,
             values=y_col,
@@ -38,7 +38,7 @@ def create_chart(df, question):
         "yearly",
         "date"
     ]):
-        return px.line(
+        fig = px.line(
             df,
             x=x_col,
             y=y_col,
@@ -48,9 +48,11 @@ def create_chart(df, question):
 
     # Default Bar Chart
     else:
-        return px.bar(
+        fig = px.bar(
             df,
             x=x_col,
             y=y_col,
             title="Business Analysis"
         )
+
+    return fig
