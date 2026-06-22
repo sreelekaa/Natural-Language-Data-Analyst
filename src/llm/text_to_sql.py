@@ -2,7 +2,7 @@
 import google.generativeai as genai
 from dotenv import load_dotenv
 import os
-
+from src.database.schema_reader import get_schema
 load_dotenv()
 
 genai.configure(
@@ -12,22 +12,26 @@ genai.configure(
 model = genai.GenerativeModel("gemini-2.5-flash")
 
 
+
 def generate_sql(question):
+
+    schema_df = get_schema()
+
+    schema_text = ""
+
+    for _, row in schema_df.iterrows():
+        schema_text += (
+            f"Table: {row['table_name']}, "
+            f"Column: {row['column_name']}\n"
+        )
 
     prompt = f"""
     You are a Senior PostgreSQL Database Expert.
 
     Database: PostgreSQL
 
-    Table: sales
-
-    Columns:
-    id
-    product_name
-    category
-    quantity
-    revenue
-    sale_date
+    Database Schema:
+    {schema_text}
 
     Rules:
     - Generate ONLY PostgreSQL compatible SQL.
@@ -38,6 +42,8 @@ def generate_sql(question):
     - Only generate SELECT statements.
     - Use aggregation functions when appropriate.
     - For ranking questions use ORDER BY and LIMIT.
+    - If uploaded_data exists, use it when relevant.
+- Generate PostgreSQL SQL only.
 
     Question:
     {question}
@@ -53,4 +59,6 @@ def generate_sql(question):
     sql = sql.strip()
 
     return sql
+
+
 
